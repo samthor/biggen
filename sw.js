@@ -3,9 +3,9 @@
 
 const disabled = false;
 
-const VERSION = 'lollerskates';
+const VERSION = 'lollerskates2';
 const CACHE_NAME = 'cache';
-const PRECACHE = ['/', '/styles.css', '/manifest.json'];
+const PRECACHE = ['/', '/styles.css', '/manifest.json', 'https://cdn.rawgit.com/GoogleChrome/pwacompat/v1.0.0/pwacompat.min.js'];
 
 self.addEventListener('activate', ev => {
   // Claim all clients immediately.
@@ -15,7 +15,8 @@ self.addEventListener('activate', ev => {
 self.addEventListener('install', ev => {
   const precache = caches.open(CACHE_NAME).then(cache => {
     const requests = PRECACHE.map(url => {
-      return fetch(url).then(response => {
+      // TODO: do we need cors to cache rawgit correctly?
+      return fetch(url, {mode: 'cors'}).then(response => {
         if (response.status === 200) {
           cache.put(new Request(url), response);
         } else {
@@ -34,13 +35,16 @@ self.addEventListener('fetch', ev => {
   }
   const url = new URL(ev.request.url);
   ev.respondWith(caches.open(CACHE_NAME)
-      .then(cache => cache.match(url)))
+      .then(cache => cache.match(url))
       .then(response => {
         if (!response) {
-          return fetch(ev.equest);
+          if (!url.hostname.match(/google-analytics\.com$/)) {
+            console.debug('can\'t serve from cache', ev.request.url);
+          }
+          return fetch(ev.request);
         }
         return response;
-      });
+      }));
 });
 
 self.addEventListener('message', ev => {
