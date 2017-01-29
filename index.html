@@ -7,6 +7,13 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="shortcut icon" href="icon-64.png" sizes="64x64" />
   <script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-16971638-8', 'auto');
+  </script>
+  <script>
 'use strict';
 
 if ('serviceWorker' in navigator) {
@@ -107,6 +114,9 @@ window.onpopstate = function() {
     showcase.textContent = defaultMessages[choice];
   }
   resizeShowcaseText();
+
+  ga('set', 'page', mode ? '/show' : '/');
+  ga('send', 'pageview');
 };
 
 // nb. only works in fullscreen (ATHS), but that's fine?
@@ -133,6 +143,7 @@ var showcase = document.querySelector('#showcase');
 showcase.addEventListener('click', function() {
   updateURL(false, '');
   window.onpopstate();
+  ga('send', 'event', 'showcase', 'show', input.value);
 });
 
 (function() {
