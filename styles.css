@@ -1,0 +1,137 @@
+*[hidden] {
+  display: none !important;
+}
+
+html {
+  background: #0f4a73;
+  color: white;
+  min-height: 100vmin;
+  font-family: 'Roboto', 'Arial', Sans-Serif;
+}
+
+html.enabled {
+  background: black;
+}
+
+body {
+  min-height: 100vmin;
+  height: 100vmin;
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+}
+
+form {
+  position: relative;
+  display: flex;
+  min-height: 100vmin;
+  line-height: 100vmin;
+  font-size: 50vmin;
+  align-items: stretch;
+  text-shadow: 0 6px 2px rgba(0, 0, 0, 0.125);
+}
+@media (min-height: 320px) {
+  form {
+    min-height: 200px;
+    line-height: 200px;
+    font-size: 100px;
+  }
+}
+@media (max-width: 767px) {
+  form {
+    font-size: 60px;
+  }
+}
+@media (max-width: 399px) {
+  form {
+    font-size: 40px;
+  }
+}
+
+
+input {
+  font: inherit;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.125);
+  border: 0;
+  text-align: left;
+  flex-grow: 1;
+  padding: 0;
+  -moz-resize: none;
+  resize: none;
+  padding-left: 3vw;
+  width: 0;
+  transition: box-shadow 0.25s;
+  text-shadow: inherit;
+}
+
+input::-webkit-input-placeholder {
+  color: inherit;
+  text-align: center;
+  opacity: 0.25;
+  transition: opacity 0.25s;
+  will-change: opacity;
+  text-shadow: inherit;
+}
+input:focus::-webkit-input-placeholder {
+  opacity: 0;
+}
+input::placeholder {
+  color: inherit;
+  text-align: center;
+  opacity: 0.25;
+  transition: opacity 0.25s;
+  will-change: opacity;
+  text-shadow: inherit;
+}
+input:focus::placeholder {
+  opacity: 0;
+}
+
+input::selection {
+  border-radius: 10px;
+  background: #1f9bf1;
+  color: white;
+}
+
+input:focus {
+  outline: 0;
+  box-shadow: inset 2vw 0 0 0 rgba(255, 255, 255, 0.5);
+}
+
+button {
+  text-shadow: inherit;
+  background: rgba(0, 0, 0, 0.125);
+  width: 20vw;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+  transition: box-shadow 0.25s;
+}
+
+button:focus {
+  outline: 0;
+  box-shadow: inset -2vw 0 0 0 rgba(255, 255, 255, 0.5);
+}
+
+@keyframes move {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(calc(-100% + 100vw));
+  }
+}
+
+#showcase {
+  min-width: 100vw;
+  animation: move 10s ease-in-out infinite alternate;
+  height: 100%;
+  font-size: 80vmax;
+  line-height: 100vmax;
+  white-space: nowrap;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}

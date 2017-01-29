@@ -1,0 +1,26 @@
+{
+  "name": "EMBIGGEN",
+  "short_name": "BIGGEN",
+  "start_url": "./?utm_source=web_app_manifest&utm_medium=web_app_manifest",
+  "display": "fullscreen",
+  "orientation": "landscape-primary",
+  "theme_color": "#000000",
+  "background_color": "#0f4a73",
+  "icons": [
+    {
+      "src": "icon-64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

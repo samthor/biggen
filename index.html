@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>EMBIGGEN</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no" />
+  <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
+  <link rel="manifest" href="manifest.json" />
+  <script>
+'use strict';
+
+if ('serviceWorker' in navigator) {
+  window.sw = navigator.serviceWorker.register('/sw.js');
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    window.location.reload();
+  });
+  const mc = new MessageChannel();
+  navigator.serviceWorker.controller.postMessage('version', [mc.port1]);
+  mc.port2.onmessage = function(event) {
+    console.debug('sw version', event.data);
+  };
+}
+
+  </script>
+</head>
+<body>
+
+<form>
+  <input type="text" placeholder="EMBIGGEN" autofocus />
+  <button>&#x2712;</button>
+</form>
+
+<div id="showcase" hidden></div>
+
+<script>
+
+var defaultMessages = [
+  'EMBIGGEN',
+];
+
+function updateURL(replace, search, hash) {
+  var url = window.location.pathname;
+  if (search === undefined) {
+    url += window.location.search;
+  } else if (search) {
+    url += '?' + search;
+  }
+  if (hash === undefined) {
+    url += window.location.hash;
+  } else if (hash) {
+    url += '#' + window.encodeURIComponent(hash);
+  }
+  if (replace) {
+    window.history.replaceState(null, null, url);
+  } else {
+    window.history.pushState(null, null, url);
+  }
+}
+
+window.onpopstate = function() {
+  var mode = window.location.search === '?show';
+  var text = window.decodeURIComponent(window.location.hash.substr(1));
+
+  form.hidden = mode;
+  showcase.hidden = !mode;
+  document.documentElement.classList.toggle('enabled', mode);
+  input.value = text;
+  showcase.textContent = text;
+
+  if (mode && !text) {
+    var choice = Math.floor(Math.random() * defaultMessages.length);
+    showcase.textContent = defaultMessages[choice];
+  }
+};
+
+// nb. only works in fullscreen (ATHS), but that's fine?
+//screen && screen.orientation && screen.orientation.lock('landscape');
+
+var input = document.querySelector('input');
+function changeHandler() {
+  // TODO: resize text?
+  if (!form.hidden) {
+    updateURL(true, undefined, input.value);
+  }
+}
+['keydown', 'keyup', 'change'].forEach(function(type) {
+  input.addEventListener(type, changeHandler);
+});
+
+var form = document.querySelector('form');
+form.addEventListener('submit', function(ev) {
+  ev.preventDefault();
+  updateURL(false, 'show', input.value);
+  window.onpopstate();
+});
+
+var showcase = document.querySelector('#showcase');
+showcase.addEventListener('click', function() {
+  updateURL(false, '');
+  window.onpopstate();
+});
+
+(function() {
+  // For some reason, Chrome likes to refresh us with a '?show/' - trailing slash. Remove it.
+  var search = window.location.search || '';
+  if (search.match(/\/$/)) {
+    window.history.replaceState(null, null, search.substr(0, search.length - 1));
+  }
+}());
+
+window.onpopstate();
+
+</script>
+
+</body>
+</html>
