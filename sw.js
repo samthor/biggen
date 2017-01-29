@@ -3,7 +3,7 @@
 
 const disabled = false;
 
-const VERSION = 'lollerskates-typing';
+const VERSION = 'lollerskates-typing-123';
 const CACHE_NAME = 'cache';
 const PRECACHE = ['/', '/styles.css', '/manifest.json', 'https://cdn.rawgit.com/GoogleChrome/pwacompat/v1.0.0/pwacompat.min.js'];
 
@@ -30,6 +30,12 @@ self.addEventListener('install', ev => {
 });
 
 self.addEventListener('fetch', ev => {
+  if (ev.request.method === 'POST') {
+    ev.request.text().then(text => {
+      console.info('got text', text);
+    });
+  }
+
   if (disabled || ev.request.method !== 'GET') {
     return;
   }
