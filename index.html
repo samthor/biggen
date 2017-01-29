@@ -21,11 +21,15 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('controllerchange', function() {
     window.location.reload();
   });
-  const mc = new MessageChannel();
-  navigator.serviceWorker.controller.postMessage('version', [mc.port1]);
-  mc.port2.onmessage = function(event) {
-    console.debug('sw version', event.data);
-  };
+  if (navigator.serviceWorker.controller) {
+    const mc = new MessageChannel();
+    navigator.serviceWorker.controller.postMessage('version', [mc.port1]);
+    mc.port2.onmessage = function(event) {
+      console.debug('sw version', event.data);
+    };
+  } else {
+    // probably not on https://
+  }
 }
 
   </script>
