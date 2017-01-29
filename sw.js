@@ -1,7 +1,9 @@
 
 // nb. SW needs a delta change on every site update.
 
-const VERSION = 'lollerskates';
+const disabled = true;
+
+const VERSION = 'lollerskatesz';
 const CACHE_NAME = 'cache';
 const PRECACHE = ['/', '/styles.css', '/manifest.json'];
 
@@ -27,7 +29,7 @@ self.addEventListener('install', ev => {
 });
 
 self.addEventListener('fetch', ev => {
-  if (ev.request.method !== 'GET') {
+  if (disabled || ev.request.method !== 'GET') {
     return;
   }
   const url = new URL(ev.request.url);

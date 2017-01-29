@@ -24,12 +24,25 @@ if ('serviceWorker' in navigator) {
 </head>
 <body>
 
-<form>
-  <input type="text" placeholder="EMBIGGEN" autofocus />
-  <button>&#x2712;</button>
-</form>
+<div id="enter">
+  <form>
+    <input type="text" placeholder="EMBIGGEN" autofocus />
+    <button>&#x2712;</button>
+  </form>
+  <hr />
+  <footer>
+    <p>
+      <strong>Embiggen</strong>, an offline-ready <a href="https://google.com/search?q=progressive+web+app" target="_blank">Progressive Web App</a> for making text big
+    </p>
+    <p>
+      with &lt;3 by <a href="https://twitter.com/samthor" target="_blank">@samthor</a>
+    </p>
+  </footer>
+</div>
 
-<div id="showcase" hidden></div>
+<div id="viewport" class="rotate">
+  <div id="showcase" hidden></div>
+</div>
 
 <script>
 
@@ -56,11 +69,33 @@ function updateURL(replace, search, hash) {
   }
 }
 
+function resizeShowcaseText() {
+  var vmax = Math.max(window.innerHeight, window.innerWidth);
+  var rect = showcase.getBoundingClientRect();
+  var rmax = Math.max(rect.width, rect.height);
+
+  // TODO(samthor): We should instead allow wrap, but for now this is fine.
+  if (rmax > vmax * 2) {
+    showcase.style.fontSize = '40vmin';
+  } else {
+    showcase.style.fontSize = null;
+  }
+
+  showcase.classList.remove('anim');
+  showcase.offsetTop;
+  showcase.classList.add('anim');
+};
+
+window.onorientationchange = window.onresize = function() {
+  viewport.classList.toggle('rotate', window.innerWidth < window.innerHeight);
+  resizeShowcaseText();
+};
+
 window.onpopstate = function() {
   var mode = window.location.search === '?show';
   var text = window.decodeURIComponent(window.location.hash.substr(1));
 
-  form.hidden = mode;
+  enter.hidden = mode;
   showcase.hidden = !mode;
   document.documentElement.classList.toggle('enabled', mode);
   input.value = text;
@@ -70,6 +105,7 @@ window.onpopstate = function() {
     var choice = Math.floor(Math.random() * defaultMessages.length);
     showcase.textContent = defaultMessages[choice];
   }
+  resizeShowcaseText();
 };
 
 // nb. only works in fullscreen (ATHS), but that's fine?
@@ -77,7 +113,6 @@ window.onpopstate = function() {
 
 var input = document.querySelector('input');
 function changeHandler() {
-  // TODO: resize text?
   if (!form.hidden) {
     updateURL(true, undefined, input.value);
   }
@@ -103,11 +138,12 @@ showcase.addEventListener('click', function() {
   // For some reason, Chrome likes to refresh us with a '?show/' - trailing slash. Remove it.
   var search = window.location.search || '';
   if (search.match(/\/$/)) {
-    window.history.replaceState(null, null, search.substr(0, search.length - 1));
+    window.history.replaceState(null, null, search.substr(0, search.length - 1) + (window.location.hash || ''));
   }
 }());
 
 window.onpopstate();
+window.onresize();
 
 </script>
 

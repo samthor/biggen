@@ -21,6 +21,52 @@ body {
   overflow: hidden;
 }
 
+#enter {
+  min-height: 100vh;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+#enter hr {
+  visibility: hidden;
+  flex-grow: 1;
+  height: 0;
+  margin: 0;
+}
+
+footer {
+  padding: 12px;
+  margin: 12px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.125);
+  border: 2px solid rgba(0, 0, 0, 0.25);
+  max-width: 400px;
+  align-self: center;
+}
+
+p {
+  margin: 8px;
+  text-align: center;
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 23px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.125);
+}
+
+p strong {
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+a {
+  color: #1f9cf1;
+  text-decoration: none;
+}
+a:focus {
+  outline: 0;
+  text-decoration: underline;
+}
+
 form {
   position: relative;
   display: flex;
@@ -29,6 +75,7 @@ form {
   font-size: 50vmin;
   align-items: stretch;
   text-shadow: 0 6px 2px rgba(0, 0, 0, 0.125);
+  box-shadow: 0 4px 2px rgba(0, 0, 0, 0.25);
 }
 @media (min-height: 320px) {
   form {
@@ -69,23 +116,13 @@ input::-webkit-input-placeholder {
   color: inherit;
   text-align: center;
   opacity: 0.25;
-  transition: opacity 0.25s;
-  will-change: opacity;
   text-shadow: inherit;
-}
-input:focus::-webkit-input-placeholder {
-  opacity: 0;
 }
 input::placeholder {
   color: inherit;
   text-align: center;
   opacity: 0.25;
-  transition: opacity 0.25s;
-  will-change: opacity;
   text-shadow: inherit;
-}
-input:focus::placeholder {
-  opacity: 0;
 }
 
 input::selection {
@@ -120,18 +157,30 @@ button:focus {
     transform: translateX(0%);
   }
   100% {
-    transform: translateX(calc(-100% + 100vw));
+    transform: translateX(calc(-100% + 100vmax));
   }
 }
 
 #showcase {
-  min-width: 100vw;
-  animation: move 10s ease-in-out infinite alternate;
-  height: 100%;
-  font-size: 80vmax;
-  line-height: 100vmax;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  min-width: 100vmax;
+  height: 100vmin;
+  font-size: 80vmin;
+  line-height: 100vmin;
   white-space: nowrap;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
+  font-weight: 500;
+  text-align: center;
+}
+#showcase.anim {
+  animation: move 10s ease-in-out infinite alternate;
+}
+
+.rotate {
+  transform: rotate(90deg);
 }
