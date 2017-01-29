@@ -3,7 +3,7 @@
 
 const disabled = false;
 
-const VERSION = 'lollerskatesz';
+const VERSION = 'lollerskates';
 const CACHE_NAME = 'cache';
 const PRECACHE = ['/', '/styles.css', '/manifest.json'];
 
@@ -33,7 +33,14 @@ self.addEventListener('fetch', ev => {
     return;
   }
   const url = new URL(ev.request.url);
-  ev.respondWith(caches.open(CACHE_NAME).then(cache => cache.match(url)));
+  ev.respondWith(caches.open(CACHE_NAME)
+      .then(cache => cache.match(url)))
+      .then(response => {
+        if (!response) {
+          return fetch(ev.equest);
+        }
+        return response;
+      });
 });
 
 self.addEventListener('message', ev => {
