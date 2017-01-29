@@ -6,7 +6,8 @@ html {
   background: #0f4a73;
   color: white;
   min-height: 100vmin;
-  font-family: 'Roboto', 'Arial', Sans-Serif;
+  /* TODO: include Roboto via Web Fonts */
+  font-family: 'Roboto', 'Helvetica Neue', 'Gill Sans', 'Arial', Sans-Serif;
 }
 
 html.enabled {
