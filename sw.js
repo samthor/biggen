@@ -3,7 +3,7 @@
 
 const disabled = false;
 
-const VERSION = 'lollerskates2';
+const VERSION = 'lollerskates-typing';
 const CACHE_NAME = 'cache';
 const PRECACHE = ['/', '/styles.css', '/manifest.json', 'https://cdn.rawgit.com/GoogleChrome/pwacompat/v1.0.0/pwacompat.min.js'];
 

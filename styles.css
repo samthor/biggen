@@ -12,6 +12,7 @@ html {
 
 html.enabled {
   background: black;
+  overflow: hidden;
 }
 
 body {
@@ -19,7 +20,6 @@ body {
   height: 100vmin;
   position: relative;
   margin: 0;
-  overflow: hidden;
 }
 
 #enter {
