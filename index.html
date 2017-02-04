@@ -226,6 +226,7 @@ window.onpopstate = function() {
   } else {
     // enabled only on form submit
     noSleep.disable();
+    input.focus();
   }
 
   // set theme-color properly
@@ -254,19 +255,28 @@ form.addEventListener('submit', function(ev) {
   ev.preventDefault();
   noSleep.enable();
   updateURL(false, 'show', input.value);
+  ga('send', 'event', 'showcase', 'show', input.value);
   window.onpopstate();
 });
 
 var showcase = document.querySelector('#showcase');
 showcase.addEventListener('click', function() {
   updateURL(false, '');
+  ga('send', 'event', 'showcase', 'hide');
   window.onpopstate();
-  ga('send', 'event', 'showcase', 'show', input.value);
 });
 
 reset.addEventListener('click', function() {
   input.focus();
   window.setTimeout(changeHandler, 0);
+});
+
+window.addEventListener('keyup', function(ev) {
+  // global esc handler
+  if (ev.keyCode === 27) {
+    updateURL(false, '');
+    window.onpopstate();
+  }
 });
 
 (function() {
