@@ -92,21 +92,97 @@ function updateURL(replace, search, hash) {
   }
 }
 
+// This method is a whole lot of mess.
 function resizeShowcaseText() {
-  var vmax = Math.max(window.innerHeight, window.innerWidth);
-  var rect = showcase.getBoundingClientRect();
-  var rmax = Math.max(rect.width, rect.height);
+  var start = +new Date();
+  var vmin = Math.min(window.innerHeight, window.innerWidth);
+  var vmax = Math.max(window.innerHeight, window.innerHeight);
 
-  // TODO(samthor): We should instead allow wrap, but for now this is fine.
-  if (rmax > vmax * 2) {
-    showcase.style.fontSize = '40vmin';
-  } else {
-    showcase.style.fontSize = null;
+  var nodes = Array.prototype.slice.call(showcase.children);
+  if (!nodes.length) { return; }
+  var lastNode = nodes[nodes.length - 1];
+  nodes.forEach(function(node) {
+    node.style.fontSize = null;
+    node.style.letterSpacing = null;
+  });
+
+  var size = 1;
+  var high = 200;
+
+  // Basically: try to set the global font size so that we don't go over the allow height.
+  var steps = 0;
+  while (++steps) {
+    showcase.style.fontSize = size.toString() + 'em';
+    var used = lastNode.offsetTop + lastNode.offsetHeight;
+    var available = vmin - used;
+    var ratio = available / vmin;  // this % of screen is available
+
+    if (available < 0) {
+      high = size;
+    }
+    if (available >= 0 && available < (vmin / 20)) {
+      // within %5, ok
+      break;
+    }
+
+    if (ratio > 0) {
+      if (ratio === Infinity) {
+        throw new Error('what');
+      }
+      size = high;
+    } else {
+      size /= 1.1;
+    }
+
+    if (steps > 200) {
+      if (available > 0) {
+        break;
+      }
+      if (steps > 400) {
+        break;  // TODO: what?
+      }
+    }
   }
 
-  showcase.classList.remove('anim');
-  showcase.offsetTop;
-  showcase.classList.add('anim');
+  // Find the height of a single character.
+  var expected = document.createElement('span');
+  expected.textContent = 'a';
+  showcase.appendChild(expected);
+  var expectedHeight = expected.offsetHeight;
+  showcase.removeChild(expected);
+
+  // Find words that are have their own line, and shrink/grow them
+  nodes.forEach(function(node) {
+    // This word is too big, and takes up > one line. Shrink it until it fits.
+    var size = 1;
+    while (node.offsetHeight > expectedHeight) {
+      node.style.fontSize = (size *= 0.95) + 'em';
+    }
+    if (size < 1) {
+      return;
+    }
+
+    // This is a single word, on a single line, that could be made bigger.
+    var lastGood = size;
+    var steps = 20;
+    while (--steps) {
+      var mid = Math.abs(node.offsetLeft + node.offsetWidth / 2);
+      if (mid - showcase.offsetWidth / 2 > 2) {
+        break;
+      }
+
+      lastGood = size;
+      node.style.fontSize = (size *= 1.02) + 'em';;
+
+      if (node.offsetWidth > vmax || node.offsetHeight > expectedHeight || showcase.offsetHeight > vmin) {
+        break;
+      }
+    }
+    node.style.fontSize = lastGood + 'em';
+
+  });
+
+  console.debug('calc took', (new Date() - start) / 1000, 's');
 };
 
 window.onorientationchange = window.onresize = function() {
@@ -122,13 +198,25 @@ window.onpopstate = function() {
   showcase.hidden = !mode;
   document.documentElement.classList.toggle('enabled', mode);
   input.value = text;
-  showcase.textContent = text;
+  showcase.textContent = '';
 
-  if (mode && !text) {
-    var choice = Math.floor(Math.random() * defaultMessages.length);
-    showcase.textContent = defaultMessages[choice];
+  if (mode) {
+    if (!text) {
+      var choice = Math.floor(Math.random() * defaultMessages.length);
+      text = defaultMessages[choice];
+    }
+
+    var words = text.split(/\s+/);
+    words.forEach(function(word, i) {
+      var node = document.createElement('span');
+      node.textContent = word;
+      node.setAttribute('data-text', word);
+      node.style.zIndex = 100 + i;
+      showcase.appendChild(node);
+    });
+
+    resizeShowcaseText();
   }
-  resizeShowcaseText();
 
   // set theme-color properly
   theme.setAttribute('content', mode ? '#000000' : '#084066');
