@@ -1,7 +1,7 @@
 
 // nb. SW needs a delta change on every site update.
 
-const disabled = false;
+const disabled = true;
 
 const VERSION = 'lollerskates-bigger-bananas';
 const CACHE_NAME = 'cache';

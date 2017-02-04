@@ -126,29 +126,57 @@ input::placeholder {
   text-shadow: inherit;
 }
 
-input::selection {
+input[type="text"]::selection {
   border-radius: 10px;
   background: #1f9bf1;
   color: white;
 }
 
-input:focus {
+input[type="text"]:focus {
   outline: 0;
   box-shadow: inset 2vw 0 0 0 rgba(255, 255, 255, 0.5);
 }
 
-button {
-  text-shadow: inherit;
-  background: rgba(0, 0, 0, 0.125);
+.buttons {
   width: 20vw;
-  border: 0;
-  font: inherit;
-  color: inherit;
-  padding: 0;
-  transition: box-shadow 0.25s;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: stretch;
 }
 
-button:focus {
+button,
+input[type="reset"] {
+  text-align: center;
+  display: block;
+  flex-grow: 1;
+  text-shadow: inherit;
+  background: rgba(0, 0, 0, 0.125);
+  border: 0;
+  font: inherit;
+  line-height: 0.5em;
+  color: inherit;
+  padding: 0;
+  transition: box-shadow 0.25s, opacity 0.25s;
+  width: 100%;
+}
+button:nth-child(even),
+input[type="reset"]:nth-child(even) {
+  background: rgba(0, 0, 0, 0.175);
+}
+button.small,
+input[type="reset"].small {
+  flex-grow: 0.5;
+  font-size: 0.75em;
+}
+
+button:disabled,
+input[type="reset"]:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+button:focus,
+input[type="reset"]:focus {
   outline: 0;
   box-shadow: inset -2vw 0 0 0 rgba(255, 255, 255, 0.5);
 }

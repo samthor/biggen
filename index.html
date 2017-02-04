@@ -50,7 +50,10 @@ if ('serviceWorker' in navigator) {
 <div id="enter">
   <form>
     <input type="text" placeholder="EMBIGGEN" autofocus label="Enter text to embiggen" />
-    <button>&#x2712;</button>
+    <div class="buttons">
+      <input id="reset" disabled type="reset" class="small" title="Cancel" value="&#x2718;" />
+      <button title="Show">&#x2712;</button>
+    </div>
   </form>
   <hr />
   <footer>
@@ -201,6 +204,7 @@ window.onpopstate = function() {
   showcase.hidden = !mode;
   document.documentElement.classList.toggle('enabled', mode);
   input.value = text;
+  reset.disabled = !input.value;
   showcase.textContent = '';
 
   if (mode) {
@@ -239,6 +243,7 @@ function changeHandler() {
   if (!form.hidden) {
     updateURL(true, undefined, input.value);
   }
+  reset.disabled = !input.value;
 }
 ['keydown', 'keyup', 'change'].forEach(function(type) {
   input.addEventListener(type, changeHandler);
@@ -257,6 +262,11 @@ showcase.addEventListener('click', function() {
   updateURL(false, '');
   window.onpopstate();
   ga('send', 'event', 'showcase', 'show', input.value);
+});
+
+reset.addEventListener('click', function() {
+  input.focus();
+  window.setTimeout(changeHandler, 0);
 });
 
 (function() {
