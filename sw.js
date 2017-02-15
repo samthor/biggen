@@ -3,7 +3,7 @@
 
 const disabled = true;
 
-const VERSION = 'lollerskates-bigger-bananas-reset-a';
+const VERSION = 'lollerskates-bigger-bananas-reset-overflow';
 const CACHE_NAME = 'cache';
 const PRECACHE = ['/', '/styles.css', '/manifest.json', 'https://cdn.rawgit.com/GoogleChrome/pwacompat/v1.0.0/pwacompat.min.js', 'https://cdn.rawgit.com/richtr/NoSleep.js/v0.5.0/NoSleep.min.js'];
 

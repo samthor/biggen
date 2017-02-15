@@ -20,12 +20,14 @@ body {
   height: 100vmin;
   position: relative;
   margin: 0;
+  overflow: hidden;
 }
 
 #enter {
   min-height: 100vh;
   display: flex;
   flex-flow: column nowrap;
+  overflow: scroll;
 }
 
 #enter hr {
