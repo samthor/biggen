@@ -6,7 +6,6 @@
   <link rel="stylesheet" type="text/css" href="styles.css" media="screen" />
   <link rel="manifest" href="manifest.json" />
   <script src="https://cdn.rawgit.com/GoogleChrome/pwacompat/v1.0.3/pwacompat.min.js"></script>
-  <script src="https://cdn.rawgit.com/richtr/NoSleep.js/v0.5.0/NoSleep.min.js"></script>
 
   <meta id="theme" name="theme-color" content="#084066" />
 
@@ -73,7 +72,15 @@ if ('serviceWorker' in navigator) {
 
 <script>
 
-var noSleep = new NoSleep();
+var dummy = function() {};
+Element.prototype.requestFullscreen =
+    Element.prototype.requestFullscreen || Element.prototype.webkitRequestFullScreen || dummy;
+document.exitFullscreen = document.exitFullscreen || document.webkitExitFullscreen || dummy;
+if (!('fullscreenElement' in document)) {
+  Object.defineProperty(document, 'fullscreenElement', {get: function() {
+    return document.webkitFullscreenElement || null;
+  }});
+}
 
 var defaultMessages = [
   'EMBIGGEN',
@@ -208,6 +215,9 @@ window.onpopstate = function() {
   showcase.textContent = '';
 
   if (mode) {
+    // TODO: this will fail on initial load, since it needs a user gesture.
+    document.documentElement.requestFullscreen();
+
     if (!text) {
       var choice = Math.floor(Math.random() * defaultMessages.length);
       text = defaultMessages[choice];
@@ -224,8 +234,9 @@ window.onpopstate = function() {
 
     resizeShowcaseText();
   } else {
+    document.exitFullscreen();
+
     // enabled only on form submit
-    noSleep.disable();
     input.focus();
   }
 
@@ -253,18 +264,24 @@ function changeHandler() {
 var form = document.querySelector('form');
 form.addEventListener('submit', function(ev) {
   ev.preventDefault();
-  noSleep.enable();
   updateURL(false, 'show', input.value);
   ga('send', 'event', 'showcase', 'show', input.value);
   window.onpopstate();
 });
 
 var showcase = document.querySelector('#showcase');
-showcase.addEventListener('click', function() {
+var leaveShowcaseMode = function() {
   updateURL(false, '');
   ga('send', 'event', 'showcase', 'hide');
   window.onpopstate();
-});
+};
+showcase.addEventListener('click', leaveShowcaseMode);
+
+var maybeLeaveShowcaseMode = function() {
+  document.fullscreenElement || leaveShowcaseMode();
+};
+document.addEventListener('fullscreenchange', maybeLeaveShowcaseMode);
+document.addEventListener('webkitfullscreenchange', maybeLeaveShowcaseMode);
 
 reset.addEventListener('click', function() {
   input.focus();

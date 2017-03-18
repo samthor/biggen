@@ -1,11 +1,11 @@
 
 // nb. SW needs a delta change on every site update.
 
-const disabled = true;
+const disabled = false;
 
-const VERSION = 'pwacompat-3';
+const VERSION = 'pwacompat-3-fullscreen';
 const CACHE_NAME = 'cache';
-const PRECACHE = ['/', '/styles.css', '/manifest.json', 'https://cdn.rawgit.com/GoogleChrome/pwacompat/v1.0.3/pwacompat.min.js', 'https://cdn.rawgit.com/richtr/NoSleep.js/v0.5.0/NoSleep.min.js'];
+const PRECACHE = ['/', '/styles.css', '/manifest.json', 'https://cdn.rawgit.com/GoogleChrome/pwacompat/v1.0.3/pwacompat.min.js'];
 
 self.addEventListener('activate', ev => {
   // Claim all clients immediately.
@@ -32,7 +32,7 @@ self.addEventListener('install', ev => {
 self.addEventListener('fetch', ev => {
   if (ev.request.method === 'POST') {
     ev.request.text().then(text => {
-      console.info('got text', text);
+      console.info('got POST text', text);
     });
   }
 

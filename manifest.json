@@ -2,7 +2,7 @@
   "name": "BIGGEN",
   "short_name": "BIGGEN",
   "start_url": "./?utm_source=web_app_manifest&utm_medium=web_app_manifest",
-  "display": "fullscreen",
+  "display": "standalone",
   "orientation": "landscape-primary",
   "theme_color": "#000000",
   "background_color": "#0f4a73",
