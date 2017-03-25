@@ -41,7 +41,7 @@ self.addEventListener('fetch', ev => {
   }
   const url = new URL(ev.request.url);
   ev.respondWith(caches.open(CACHE_NAME)
-      .then(cache => cache.match(url))
+      .then(cache => cache.match(url, {ignoreSearch: true}))
       .then(response => {
         if (!response) {
           if (!url.hostname.match(/google-analytics\.com$/)) {
